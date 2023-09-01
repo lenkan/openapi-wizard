@@ -101,3 +101,39 @@ func TestIntersection(t *testing.T) {
 
 	assert.Equal(t, "(string & number)", result)
 }
+
+func TestArraySchema(t *testing.T) {
+	schema := openapi.JsonSchemaDefinition{
+		Items: &openapi.JsonSchemaDefinition{
+			Type: "string",
+		},
+	}
+
+	result := FormatSchemaShape(schema)
+
+	assert.Equal(t, "(string)[]", result)
+}
+
+func TestEnumSchema(t *testing.T) {
+	schema := openapi.JsonSchemaDefinition{
+		Type: "string",
+		Enum: []string{
+			"abc",
+			"def",
+		},
+	}
+
+	result := FormatSchemaShape(schema)
+
+	assert.Equal(t, "(\"abc\" | \"def\")", result)
+}
+
+func TestBooleanSchema(t *testing.T) {
+	schema := openapi.JsonSchemaDefinition{
+		Type: "boolean",
+	}
+
+	result := FormatSchemaShape(schema)
+
+	assert.Equal(t, "boolean", result)
+}

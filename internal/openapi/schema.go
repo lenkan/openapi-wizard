@@ -36,6 +36,8 @@ type JsonSchemaDefinition struct {
 	AdditionalProperties bool                            `default:"false" yaml:"additionalProperties"`
 	OneOf                []JsonSchemaDefinition          `yaml:"oneOf"`
 	AllOf                []JsonSchemaDefinition          `yaml:"allOf"`
+	Enum                 []string                        `yaml:"enum"`
+	Items                *JsonSchemaDefinition           `yaml:"items"`
 }
 
 type ParameterDefinition struct {

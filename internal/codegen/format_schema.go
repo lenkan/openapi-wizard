@@ -33,6 +33,22 @@ func FormatSchemaShape(schema openapi.JsonSchemaDefinition) string {
 		return "(" + strings.Join(types, " | ") + ")"
 	}
 
+	if schema.Items != nil {
+		return "(" + FormatSchemaShape(*schema.Items) + ")[]"
+	}
+
+	if len(schema.Enum) > 0 {
+		enum := []string{}
+		for _, value := range schema.Enum {
+			enum = append(enum, "\""+value+"\"")
+		}
+		return "(" + strings.Join(enum, " | ") + ")"
+	}
+
+	if schema.Type == "boolean" {
+		return "boolean"
+	}
+
 	if schema.Type == "string" {
 		return "string"
 	}

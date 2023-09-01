@@ -55,12 +55,22 @@ func formatOperation(path string, method string, operation *openapi.OperationDef
 				"}",
 			}...)
 		}
+
+		if param.In == "path" && param.Schema.Type == "string" {
+			val := "params." + paramName
+			code = append(code, "url.pathname = url.pathname.replace(\"{"+param.Name+"}\", "+val+");")
+		}
 	}
 
 	responseShape := FormatSchemaShape(operation.Responses["200"].Content["application/json"].Schema)
 
+	paramsSuffix := ""
+	if len(operation.Parameters) == 0 {
+		paramsSuffix = "?"
+	}
+
 	return strings.Join([]string{
-		"  async " + name + "(params: " + interfaceName + "): Promise<" + responseShape + "> {", //
+		"  async " + name + "(params" + paramsSuffix + ": " + interfaceName + "): Promise<" + responseShape + "> {", //
 		"    const headers = new Headers();",
 		"    const url = new URL(\"" + path + "\", this.baseUrl)",
 		"    " + strings.Join(code, "\n  "),
