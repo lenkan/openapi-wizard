@@ -1,16 +1,15 @@
-package codegen
+package openapi
 
 import (
 	"testing"
 
-	"github.com/lenkan/openapi-wizard/internal/openapi"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestObjectWithRequiredProperty(t *testing.T) {
-	schema := openapi.JsonSchemaDefinition{
+	schema := JsonSchemaDefinition{
 		Type: "object",
-		Properties: map[string]openapi.JsonSchemaDefinition{
+		Properties: map[string]JsonSchemaDefinition{
 			"name": {Type: "string"},
 		},
 		Required: []string{"name"},
@@ -22,9 +21,9 @@ func TestObjectWithRequiredProperty(t *testing.T) {
 }
 
 func TestObjectWithOptionalProperty(t *testing.T) {
-	schema := openapi.JsonSchemaDefinition{
+	schema := JsonSchemaDefinition{
 		Type: "object",
-		Properties: map[string]openapi.JsonSchemaDefinition{
+		Properties: map[string]JsonSchemaDefinition{
 			"name": {Type: "string"},
 		},
 		Required: []string{},
@@ -36,9 +35,9 @@ func TestObjectWithOptionalProperty(t *testing.T) {
 }
 
 func TestObjectWithNoProperties(t *testing.T) {
-	schema := openapi.JsonSchemaDefinition{
+	schema := JsonSchemaDefinition{
 		Type:       "object",
-		Properties: map[string]openapi.JsonSchemaDefinition{},
+		Properties: map[string]JsonSchemaDefinition{},
 	}
 
 	result := FormatSchemaShape(schema)
@@ -47,9 +46,9 @@ func TestObjectWithNoProperties(t *testing.T) {
 }
 
 func TestObjectWithAdditionalProperties(t *testing.T) {
-	schema := openapi.JsonSchemaDefinition{
+	schema := JsonSchemaDefinition{
 		Type:                 "object",
-		Properties:           map[string]openapi.JsonSchemaDefinition{},
+		Properties:           map[string]JsonSchemaDefinition{},
 		AdditionalProperties: true,
 	}
 
@@ -59,8 +58,8 @@ func TestObjectWithAdditionalProperties(t *testing.T) {
 }
 
 func TestUnion(t *testing.T) {
-	schema := openapi.JsonSchemaDefinition{
-		OneOf: []openapi.JsonSchemaDefinition{
+	schema := JsonSchemaDefinition{
+		OneOf: []JsonSchemaDefinition{
 			{Type: "string"},
 			{Type: "number"},
 		},
@@ -72,10 +71,10 @@ func TestUnion(t *testing.T) {
 }
 
 func TestUnionWithObjects(t *testing.T) {
-	schema := openapi.JsonSchemaDefinition{
-		OneOf: []openapi.JsonSchemaDefinition{
+	schema := JsonSchemaDefinition{
+		OneOf: []JsonSchemaDefinition{
 			{
-				Type: "object", Properties: map[string]openapi.JsonSchemaDefinition{
+				Type: "object", Properties: map[string]JsonSchemaDefinition{
 					"name": {Type: "string"},
 				},
 				Required: []string{"name"},
@@ -90,8 +89,8 @@ func TestUnionWithObjects(t *testing.T) {
 }
 
 func TestIntersection(t *testing.T) {
-	schema := openapi.JsonSchemaDefinition{
-		AllOf: []openapi.JsonSchemaDefinition{
+	schema := JsonSchemaDefinition{
+		AllOf: []JsonSchemaDefinition{
 			{Type: "string"},
 			{Type: "number"},
 		},
@@ -103,8 +102,8 @@ func TestIntersection(t *testing.T) {
 }
 
 func TestArraySchema(t *testing.T) {
-	schema := openapi.JsonSchemaDefinition{
-		Items: &openapi.JsonSchemaDefinition{
+	schema := JsonSchemaDefinition{
+		Items: &JsonSchemaDefinition{
 			Type: "string",
 		},
 	}
@@ -115,7 +114,7 @@ func TestArraySchema(t *testing.T) {
 }
 
 func TestEnumSchema(t *testing.T) {
-	schema := openapi.JsonSchemaDefinition{
+	schema := JsonSchemaDefinition{
 		Type: "string",
 		Enum: []string{
 			"abc",
@@ -129,7 +128,7 @@ func TestEnumSchema(t *testing.T) {
 }
 
 func TestBooleanSchema(t *testing.T) {
-	schema := openapi.JsonSchemaDefinition{
+	schema := JsonSchemaDefinition{
 		Type: "boolean",
 	}
 

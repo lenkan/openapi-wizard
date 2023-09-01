@@ -28,18 +28,6 @@ type ContentDefinition struct {
 	Schema JsonSchemaDefinition `yaml:"schema"`
 }
 
-type JsonSchemaDefinition struct {
-	Type                 string                          `yaml:"type"`
-	Properties           map[string]JsonSchemaDefinition `yaml:"properties"`
-	Ref                  string                          `yaml:"$ref"`
-	Required             []string                        `yaml:"required"`
-	AdditionalProperties bool                            `default:"false" yaml:"additionalProperties"`
-	OneOf                []JsonSchemaDefinition          `yaml:"oneOf"`
-	AllOf                []JsonSchemaDefinition          `yaml:"allOf"`
-	Enum                 []string                        `yaml:"enum"`
-	Items                *JsonSchemaDefinition           `yaml:"items"`
-}
-
 type ParameterDefinition struct {
 	In       string               `yaml:"in"`
 	Name     string               `yaml:"name"`

@@ -1,17 +1,16 @@
-package codegen
+package openapi
 
 import (
 	"strings"
 
 	"github.com/iancoleman/strcase"
-	"github.com/lenkan/openapi-wizard/internal/openapi"
 )
 
 func formatParameterName(name string) string {
 	return strcase.ToLowerCamel(name)
 }
 
-func formatParameterInterface(name string, params []openapi.ParameterDefinition) string {
+func formatParameterInterface(name string, params []ParameterDefinition) string {
 	result := []string{}
 
 	for _, param := range params {
@@ -31,7 +30,7 @@ func formatParameterInterface(name string, params []openapi.ParameterDefinition)
 	}, "\n")
 }
 
-func formatOperation(path string, method string, operation *openapi.OperationDefinition) string {
+func formatOperation(path string, method string, operation *OperationDefinition) string {
 	name := strcase.ToLowerCamel(operation.OperationId)
 	interfaceName := strcase.ToCamel(name + "_params")
 
@@ -85,7 +84,7 @@ func formatOperation(path string, method string, operation *openapi.OperationDef
 	}, "\n")
 }
 
-func formatMethods(operations []openapi.ApiOperation, indent string) string {
+func formatMethods(operations []ApiOperation, indent string) string {
 	result := []string{}
 
 	for _, operation := range operations {
@@ -95,7 +94,7 @@ func formatMethods(operations []openapi.ApiOperation, indent string) string {
 	return strings.Join(result, "\n"+indent)
 }
 
-func formatInterfaces(operations []openapi.ApiOperation, indent string) string {
+func formatInterfaces(operations []ApiOperation, indent string) string {
 	result := []string{}
 
 	for _, operation := range operations {
@@ -105,7 +104,7 @@ func formatInterfaces(operations []openapi.ApiOperation, indent string) string {
 	return strings.Join(result, "\n"+indent)
 }
 
-func formatSchemas(schemas []openapi.ApiSchema, indent string) string {
+func formatSchemas(schemas []ApiSchema, indent string) string {
 	result := []string{}
 
 	for _, schema := range schemas {
@@ -115,7 +114,7 @@ func formatSchemas(schemas []openapi.ApiSchema, indent string) string {
 	return strings.Join(result, "\n"+indent)
 }
 
-func FormatTypescriptClient(spec *openapi.ApiDefinition) string {
+func FormatTypescriptClient(spec *ApiDefinition) string {
 	operations := spec.ListOperations()
 	schemas := spec.ListSchemas()
 

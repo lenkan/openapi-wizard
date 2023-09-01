@@ -1,14 +1,25 @@
-package codegen
+package openapi
 
 import (
 	"strings"
 
 	"github.com/iancoleman/strcase"
-	"github.com/lenkan/openapi-wizard/internal/openapi"
 	"golang.org/x/exp/slices"
 )
 
-func MapShapes(schemas []openapi.JsonSchemaDefinition) []string {
+type JsonSchemaDefinition struct {
+	Type                 string                          `yaml:"type"`
+	Properties           map[string]JsonSchemaDefinition `yaml:"properties"`
+	Ref                  string                          `yaml:"$ref"`
+	Required             []string                        `yaml:"required"`
+	AdditionalProperties bool                            `default:"false" yaml:"additionalProperties"`
+	OneOf                []JsonSchemaDefinition          `yaml:"oneOf"`
+	AllOf                []JsonSchemaDefinition          `yaml:"allOf"`
+	Enum                 []string                        `yaml:"enum"`
+	Items                *JsonSchemaDefinition           `yaml:"items"`
+}
+
+func MapShapes(schemas []JsonSchemaDefinition) []string {
 	types := []string{}
 
 	for _, s := range schemas {
@@ -22,7 +33,7 @@ func MapShapes(schemas []openapi.JsonSchemaDefinition) []string {
 	return types
 }
 
-func FormatSchemaShape(schema openapi.JsonSchemaDefinition) string {
+func FormatSchemaShape(schema JsonSchemaDefinition) string {
 	if len(schema.AllOf) > 0 {
 		types := MapShapes(schema.AllOf)
 		return "(" + strings.Join(types, " & ") + ")"

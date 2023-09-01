@@ -4,7 +4,6 @@ import (
 	"flag"
 	"fmt"
 
-	"github.com/lenkan/openapi-wizard/internal/codegen"
 	"github.com/lenkan/openapi-wizard/internal/openapi"
 )
 
@@ -26,7 +25,7 @@ func main() {
 	if print == true {
 		fmt.Println(spec.Print())
 	} else {
-		result := codegen.FormatTypescriptClient(spec)
+		result := openapi.FormatTypescriptClient(spec)
 		fmt.Println(result)
 	}
 }
