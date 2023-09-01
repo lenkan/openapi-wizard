@@ -1,0 +1,77 @@
+openapi: 3.1.0
+
+servers:
+  - url: http://example.com
+
+info:
+  title: Open API example
+  version: "1.0"
+  license:
+    name: "MIT"
+    url: "http://example.com"
+
+security:
+  - api_key: []
+
+paths:
+  /:
+    get:
+      operationId: get_hello
+      description: Hello getter
+      summary: Hello getter
+      parameters:
+        - name: q1
+          in: query
+          schema:
+            type: string
+        - name: q2
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: h1
+          in: header
+          schema:
+            type: string
+    post:
+      operationId: post_hello
+      description: Hello poster
+      summary: Hello poster
+
+  /users:
+    get:
+      operationId: get_user
+      summary: Get user
+      responses:
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "200":
+          description: List of users
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+components:
+  responses:
+    BadRequest:
+      description: Bad Request
+      content:
+        "application/json":
+          schema:
+            $ref: "#/components/schemas/Error"
+  schemas:
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+    User:
+      type: object
+      properties:
+        name:
+          type: string
+  securitySchemes:
+    api_key:
+      name: "API KEY"
+      type: apiKey
+      in: header
