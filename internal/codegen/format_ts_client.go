@@ -5,38 +5,10 @@ import (
 
 	"github.com/iancoleman/strcase"
 	"github.com/lenkan/openapi-wizard/internal/openapi"
-	"golang.org/x/exp/slices"
 )
 
 func formatParameterName(name string) string {
 	return strcase.ToLowerCamel(name)
-}
-
-func formatSchemaShape(schema openapi.JsonSchemaDefinition) string {
-	if schema.Type == "string" {
-		return "string"
-	}
-
-	if schema.Type == "object" {
-		props := []string{}
-
-		for propertyName, propertyDefinition := range schema.Properties {
-			suffix := ""
-			if !slices.Contains(propertyDefinition.Required, propertyName) {
-				suffix += "?"
-			}
-
-			props = append(props, propertyName+suffix+": "+formatSchemaShape(propertyDefinition))
-		}
-
-		return strings.Join([]string{"{", strings.Join(props, ";"), "}"}, "")
-	}
-
-	if schema.Ref != "" {
-		return strcase.ToCamel(strings.Replace(schema.Ref, "#/components/schemas/", "", 1))
-	}
-
-	return "unknown"
 }
 
 func formatParameterInterface(name string, params []openapi.ParameterDefinition) string {
@@ -49,7 +21,7 @@ func formatParameterInterface(name string, params []openapi.ParameterDefinition)
 			name += "?"
 		}
 
-		result = append(result, name+": "+formatSchemaShape(param.Schema))
+		result = append(result, name+": "+FormatSchemaShape(param.Schema))
 	}
 
 	return strings.Join([]string{
@@ -85,7 +57,7 @@ func formatOperation(path string, method string, operation *openapi.OperationDef
 		}
 	}
 
-	responseShape := formatSchemaShape(operation.Responses["200"].Content["application/json"].Schema)
+	responseShape := FormatSchemaShape(operation.Responses["200"].Content["application/json"].Schema)
 
 	return strings.Join([]string{
 		"  async " + name + "(params: " + interfaceName + "): Promise<" + responseShape + "> {", //
@@ -123,7 +95,7 @@ func formatSchemas(schemas []openapi.ApiSchema, indent string) string {
 	result := []string{}
 
 	for _, schema := range schemas {
-		result = append(result, "export type "+strcase.ToCamel(schema.Name)+" = "+formatSchemaShape(schema.Schema))
+		result = append(result, "export type "+strcase.ToCamel(schema.Name)+" = "+FormatSchemaShape(schema.Schema))
 	}
 
 	return strings.Join(result, "\n"+indent)
