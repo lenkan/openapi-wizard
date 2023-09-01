@@ -40,13 +40,32 @@ paths:
 
   /users:
     get:
-      operationId: get_user
-      summary: Get user
+      operationId: get_users
+      summary: Get users
       responses:
         "400":
           $ref: "#/components/responses/BadRequest"
         "200":
           description: List of users
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#/components/schemas/User"
+  /users/{userId}:
+    get:
+      parameters:
+        - name: userId
+          in: path
+          schema:
+            type: string
+      operationId: get_user
+      summary: Get user by id
+      responses:
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "200":
+          description: User
           content:
             application/json:
               schema:

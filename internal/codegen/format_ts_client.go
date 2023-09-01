@@ -58,7 +58,11 @@ func formatOperation(path string, method string, operation *openapi.OperationDef
 
 		if param.In == "path" && param.Schema.Type == "string" {
 			val := "params." + paramName
-			code = append(code, "url.pathname = url.pathname.replace(\"{"+param.Name+"}\", "+val+");")
+			code = append(code, []string{
+				"if (" + val + " !== undefined) {",
+				"  url.pathname = url.pathname.replace(\"{" + param.Name + "}\", " + val + ");",
+				"}",
+			}...)
 		}
 	}
 

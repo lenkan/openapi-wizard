@@ -7,7 +7,10 @@ export interface GetHelloParams {
   h1?: string;
 }
 export interface PostHelloParams {}
-export interface GetUserParams {}
+export interface GetUsersParams {}
+export interface GetUserParams {
+  userId?: string;
+}
 
 export class Api {
   constructor(private baseUrl: string = window.location.origin) {}
@@ -28,7 +31,7 @@ export class Api {
     const body = await response.json();
     return body;
   }
-  async postHello(params: PostHelloParams): Promise<unknown> {
+  async postHello(params?: PostHelloParams): Promise<unknown> {
     const headers = new Headers();
     const url = new URL("/", this.baseUrl);
 
@@ -36,10 +39,20 @@ export class Api {
     const body = await response.json();
     return body;
   }
-  async getUser(params: GetUserParams): Promise<User> {
+  async getUsers(params?: GetUsersParams): Promise<User[]> {
     const headers = new Headers();
     const url = new URL("/users", this.baseUrl);
 
+    const response = await fetch(url, { headers });
+    const body = await response.json();
+    return body;
+  }
+  async getUser(params: GetUserParams): Promise<User> {
+    const headers = new Headers();
+    const url = new URL("/users/{userId}", this.baseUrl);
+    if (params.userId !== undefined) {
+      url.pathname = url.pathname.replace("{userId}", params.userId);
+    }
     const response = await fetch(url, { headers });
     const body = await response.json();
     return body;
